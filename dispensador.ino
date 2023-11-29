@@ -106,7 +106,7 @@ void callback(const char * topic, byte * payload, unsigned int lenght) {
     if (!err) {
       String tmpdispenser = String(inputDoc["state"]["desired"]["dispenser"].as<const char*>());
       String tmpmanual = String(inputDoc["state"]["desired"]["manual"].as<const char*>());
-      if(!tmpdispenser.isEmpty() /*&& manual == "on"*/) 
+      if(!tmpdispenser.isEmpty() && manual == "on") 
         setdispenser(tmpdispenser);
       if(!tmpmanual.isEmpty()) 
         setmanual(tmpmanual);
@@ -122,12 +122,10 @@ void callback(const char * topic, byte * payload, unsigned int lenght) {
         digitalWrite(IN1, HIGH);
         digitalWrite(IN2, LOW);
         digitalWrite(pinLed, HIGH);
-        //setdispenser("on");
       } else {
         digitalWrite(IN1, LOW);
         digitalWrite(IN2, LOW);
         digitalWrite(pinLed, LOW);
-        //setdispenser("off");
       }
     }
   }
@@ -190,7 +188,7 @@ void loop() {
       if (mqttClientConnect()) previousConnectMillis = 0;
       else delay(1000);
     }
-  } else { // Connected to the MQTT Broker
+  } else {
     mqttClient.loop();
     delay(20);
   }
@@ -201,9 +199,7 @@ void loop() {
       cm2 = 0.01723 * readUltrasonicDistance(triggerPin2, echoPin2);
       Serial.println(cm1);
       Serial.println(cm2);
-      // publish
       publishValue(cm1, cm2);
-      //publishValue(counter++);
   }
 
 }
